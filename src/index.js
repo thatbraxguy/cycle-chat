@@ -1,8 +1,14 @@
 import Cycle from '@cycle/core';
-import { makeDOMDriver } from '@cycle/dom';
 import { div, p, h4, input, button } from '@cycle/dom';
 import { Observable, Subject } from 'rx';
 
+// drivers
+import { makeDOMDriver } from '@cycle/dom';
+import makeFirebaseDriver from './drivers/firebaseDriver';
+
+// components
+import inputField from './components/inputField';
+import messageList from './components/messageList';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDdXQ2o-uWzKXKZqha5PoE17nKKiGarckE',
@@ -11,37 +17,19 @@ const firebaseConfig = {
   databaseURL: 'https://cycle-chat.firebaseio.com/'
 };
 
- import makeFirebaseDriver from './firebaseDriver';
-
-const chatbox = div('.chatbox', [
-  input('#name'),
-  input('#text'),
-  button('#sendBtn', 'send')
-])
-
 function main(sources) {
-  const click$ = sources.DOM.select('#sendBtn').events('click');
+  const click$ = sources.DOM.select('#submit').events('click');
   const messages$ = sources.FIREBASE.ref('/rooms/0/messages/').events('value');
 
-  const vdom$ = messages$.map(messages => {
-    let chat = [];
-    if (messages) {
-      chat = Object.keys(messages).map(key => {
-        const m = messages[key];
+  const state$ = messages$.map(messages =>
+    ({ messages: Object.keys(messages).map(x => messages[x]) }));
 
-        console.log('make dom', m.from, m.text);
-        return div('.message', [
-          h4(m.from),
-          p(m.text)
-        ])
-      });
-    }
-
-    return div('.chatContainer', [
-      div('.messages', chat),
-      chatbox
-    ]);
-  });
+  const vdom$ = state$.map(({ messages }) =>
+    div('.chatContainer', [
+      messageList(messages),
+      inputField()
+    ])
+  );
 
   const sinks = {
     DOM: vdom$,

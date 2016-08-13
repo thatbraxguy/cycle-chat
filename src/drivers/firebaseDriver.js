@@ -5,12 +5,12 @@ import 'firebase/database';
 const makeRefStream = (ref, events) => {
   const stream$  = new Subject();
   events.map(e => ref.on(e, x => stream$.onNext(x.val())));
-  return stream$.startWith(null);
+  return stream$;
 };
 
 export default function (config) {
   firebase.initializeApp(config);
-console.log('makeFirebaseDriver');
+
   return (stream$) => {
     console.log('fb driver', stream$);
     stream$.map(msg => console.log('fb driver', msg));
