@@ -1,9 +1,9 @@
-/* eslint-disable */
 var path = require('path');
+var HTMLWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
-    client: './index',
+    app: './src/index',
   },
 
   output: {
@@ -21,4 +21,16 @@ module.exports = {
       },
     ],
   },
+
+  plugins: [ new HTMLWebpackPlugin() ],
+
+  devServer: {
+    port: 3000,
+    host: 'localhost',
+    historyApiFallback: true,
+    watchOptions: {
+      aggregateTimeout: 300,
+      poll: 1000
+    }
+  }
 };

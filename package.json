@@ -6,14 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "build:watch": "webpack --watch"
+    "build:watch": "webpack --watch",
+    "start": "webpack-dev-server --hot --config webpack.config.js --inline --progress --profile --colors --watch --display-error-details --display-cached --content-base build/"
   },
   "babel": {
     "presets": [
       "es2015",
       "stage-0"
     ]
-  }, 
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/brfrederick/cycle-chat.git"
@@ -39,6 +40,7 @@
     "eslint": "^3.2.2",
     "eslint-config-airbnb": "^10.0.0",
     "eslint-plugin-import": "^1.12.0",
+    "html-webpack-plugin": "^2.22.0",
     "webpack": "^1.13.1"
   },
   "dependencies": {
