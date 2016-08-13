@@ -8,6 +8,12 @@
     "build": "webpack",
     "build:watch": "webpack --watch"
   },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0"
+    ]
+  }, 
   "repository": {
     "type": "git",
     "url": "git+https://github.com/brfrederick/cycle-chat.git"
