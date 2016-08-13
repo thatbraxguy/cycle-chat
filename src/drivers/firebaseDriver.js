@@ -11,7 +11,7 @@ const makeRefStream = (ref, events) => {
 export default function (config) {
   firebase.initializeApp(config);
 
-  return (stream$) => {
+  return stream$ => {
     console.log('fb driver', stream$);
     stream$.map(msg => console.log('fb driver', msg));
 

@@ -2,7 +2,9 @@ import { div, span, h4, p, input, button } from '@cycle/dom';
 
 const message = ({ from, text }) =>
   div('.message', [
-    p('.from', { style: { display: 'inline' } }, `${from}: `),
+    p('.from',
+      { style: { display: 'inline' } },
+      `${from}: `),
     span(text)
   ]);
 

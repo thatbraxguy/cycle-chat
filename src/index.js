@@ -12,14 +12,13 @@ import messageList from './components/messageList';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDdXQ2o-uWzKXKZqha5PoE17nKKiGarckE',
-  // authDomain,
-  // storageBucket
   databaseURL: 'https://cycle-chat.firebaseio.com/'
 };
 
 function main(sources) {
+  const room$ = sources.FIREBASE.ref('/rooms/0/messages/')
   const click$ = sources.DOM.select('#submit').events('click');
-  const messages$ = sources.FIREBASE.ref('/rooms/0/messages/').events('value');
+  const messages$ = room$.events('value');
 
   const state$ = messages$.map(messages =>
     ({ messages: Object.keys(messages).map(x => messages[x]) }));
@@ -36,8 +35,9 @@ function main(sources) {
     FIREBASE: click$.map(() => {
       const from = document.querySelector('#name').value;
       const text = document.querySelector('#text').value;
+      document.querySelector('#text').value = '';
 
-      return sources.FIREBASE.ref('/rooms/0/messages/').push({ from, text });
+      return room$.push({ from, text });
     })
   };
 
