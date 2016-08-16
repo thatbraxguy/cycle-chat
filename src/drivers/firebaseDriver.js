@@ -1,10 +1,10 @@
-import { Subject } from 'rx';
+import { Subject } from 'rxjs';
 import firebase from 'firebase/app';
 import 'firebase/database';
 
 const makeRefStream = (ref, events) => {
-  const stream$  = new Subject();
-  events.map(e => ref.on(e, x => stream$.onNext(x.val())));
+  const stream$ = new Subject();
+  events.map(e => ref.on(e, x => stream$.next(x.val())));
   return stream$;
 };
 
@@ -16,8 +16,8 @@ export default function (config) {
       const refObj = firebase.database().ref(path);
       return {
         events: events => makeRefStream(refObj, events.split(' ')),
-        push: data => refObj.push(data)
-      }
+        push: data => refObj.push(data),
+      };
     },
   });
-};
+}

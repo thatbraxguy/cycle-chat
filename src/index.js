@@ -1,9 +1,6 @@
-import Cycle from '@cycle/core';
-import { div, p, h4, input, button } from '@cycle/dom';
-import { Observable, Subject } from 'rx';
+import { run } from '@cycle/rxjs-run';
+import { div, makeDOMDriver } from '@cycle/dom';
 
-// drivers
-import { makeDOMDriver } from '@cycle/dom';
 import makeFirebaseDriver from './drivers/firebaseDriver';
 
 // components
@@ -12,11 +9,11 @@ import messageList from './components/messageList';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDdXQ2o-uWzKXKZqha5PoE17nKKiGarckE',
-  databaseURL: 'https://cycle-chat.firebaseio.com/'
+  databaseURL: 'https://cycle-chat.firebaseio.com/',
 };
 
 function main(sources) {
-  const room$ = sources.FIREBASE.ref('/rooms/0/messages/')
+  const room$ = sources.FIREBASE.ref('/rooms/0/messages/');
   const click$ = sources.DOM.select('#submit').events('click');
   const messages$ = room$.events('value');
 
@@ -26,7 +23,7 @@ function main(sources) {
   const vdom$ = state$.map(({ messages }) =>
     div('.chatContainer', [
       messageList(messages),
-      inputField()
+      inputField(),
     ])
   );
 
@@ -38,15 +35,15 @@ function main(sources) {
       document.querySelector('#text').value = '';
 
       return room$.push({ from, text });
-    })
+    }),
   };
 
   return sinks;
-};
+}
 
 const drivers = {
   DOM: makeDOMDriver('#app'),
-  FIREBASE: makeFirebaseDriver(firebaseConfig)
+  FIREBASE: makeFirebaseDriver(firebaseConfig),
 };
 
-Cycle.run(main, drivers);
+run(main, drivers);
