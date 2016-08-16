@@ -4,6 +4,7 @@
   "description": "A chat to use on your bicycle",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint src/",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "build:watch": "webpack --watch",
@@ -46,7 +47,12 @@
   "dependencies": {
     "@cycle/core": "^7.0.0",
     "@cycle/dom": "^12.1.0",
+    "@cycle/rx-run": "^7.0.1",
+    "@cycle/rxjs-run": "^3.0.3",
+    "eslint-config-airbnb": "^10.0.1",
+    "eslint-config-airbnb-base": "^5.0.2",
     "firebase": "^3.2.1",
-    "ramda": "^0.22.1"
+    "ramda": "^0.22.1",
+    "rx": "^4.1.0"
   }
 }
