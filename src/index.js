@@ -1,6 +1,7 @@
 import { run } from '@cycle/rxjs-run';
 import { Observable } from 'rxjs';
 import { div, makeDOMDriver } from '@cycle/dom';
+import firebase from 'firebase/app';
 
 import makeFirebaseDriver from './drivers/firebaseDriver';
 
@@ -36,7 +37,12 @@ function main({ DOM, FIREBASE }) {
   const sinks = {
     DOM: vdom$,
     FIREBASE: click$.withLatestFrom(props$, (btnStream, [from, text]) =>
-      room$.push({ from, text })),
+      ({
+        ref: '/rooms/0/messages/',
+        type: 'push',
+        data: { from, text },
+      })
+    ),
   };
 
   return sinks;
@@ -44,7 +50,7 @@ function main({ DOM, FIREBASE }) {
 
 const drivers = {
   DOM: makeDOMDriver('#app'),
-  FIREBASE: makeFirebaseDriver(firebaseConfig),
+  FIREBASE: makeFirebaseDriver(firebase.initializeApp(firebaseConfig)),
 };
 
 run(main, drivers);

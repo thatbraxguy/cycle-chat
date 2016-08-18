@@ -1,6 +1,14 @@
 import { Subject } from 'rxjs';
-import firebase from 'firebase/app';
 import 'firebase/database';
+import api from './firebaseAPI';
+
+let app = {};
+const refs = {};
+
+const makeRef = path => {
+  refs[path] = refs[path] || app.database().ref(path);
+  return refs[path];
+};
 
 const makeRefStream = (ref, events) => {
   const stream$ = new Subject();
@@ -8,16 +16,21 @@ const makeRefStream = (ref, events) => {
   return stream$;
 };
 
-export default function (config) {
-  firebase.initializeApp(config);
+const sources = () => ({
+  ref: path => {
+    makeRef(path);
 
-  return stream$ => ({
-    ref: path => {
-      const refObj = firebase.database().ref(path);
-      return {
-        events: events => makeRefStream(refObj, events.split(' ')),
-        push: data => refObj.push(data),
-      };
-    },
-  });
+    return {
+      events: events => makeRefStream(refs[path], events.split(' ')),
+    };
+  },
+});
+
+export default function (firebase) {
+  app = firebase;
+
+  return stream$ => {
+    stream$.map(e => api(refs[e.ref])[e.type](e.data));
+    return sources();
+  };
 }
